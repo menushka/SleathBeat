@@ -20,10 +20,10 @@ public class InputManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (OnInput != null) {
-			if (Input.GetKeyDown(KeyCode.W)) OnInput(FORWARD);
-			if (Input.GetKeyDown(KeyCode.S)) OnInput(BACK);
-			if (Input.GetKeyDown(KeyCode.A)) OnInput(LEFT);
-			if (Input.GetKeyDown(KeyCode.D)) OnInput(RIGHT);
+			if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) OnInput(FORWARD);
+			if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) OnInput(BACK);
+			if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) OnInput(LEFT);
+			if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) OnInput(RIGHT);
 		}
 	}
 }

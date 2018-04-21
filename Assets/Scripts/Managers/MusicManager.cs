@@ -27,13 +27,14 @@ public class MusicManager : MonoBehaviour {
 		}
 	}
 
-	void Start () {
+    void Start () {
 		audioSource.Play();
 	}
 	
 	void Update () {
 		float seconds = (float) audioSource.timeSamples / (float) audioSource.clip.frequency;
 		int currentBeat = Mathf.FloorToInt(seconds * bps * 4);
+		currentBeat = Mathf.Clamp(currentBeat, 0, 63);
 		if (beat[currentBeat / 4, currentBeat % 4] == 1) {
 			test.color = Color.red;
 		} else {
