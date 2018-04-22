@@ -17,6 +17,10 @@ public class StageManager : MonoBehaviour {
 	private Object leftWallObject;
 	private Object rightWallObject;
 	private Object crateObject;
+	private Object enemyObject;
+
+	// TODO: Move to better location
+	private Object playerObject;
 
 	void Awake() {
 		if (instance == null) {
@@ -29,11 +33,18 @@ public class StageManager : MonoBehaviour {
 		leftWallObject = Resources.Load("Prefabs/Left Wall", typeof(GameObject));
 		rightWallObject = Resources.Load("Prefabs/Right Wall", typeof(GameObject));
 		crateObject = Resources.Load("Prefabs/Crate", typeof(GameObject));
+		enemyObject = Resources.Load("Prefabs/Enemy", typeof(GameObject));
+
+		playerObject = Resources.Load("Prefabs/Player", typeof(GameObject));
 	}
 
 	void Start() {
 		LoadStageFile("level1");
 		GenerateStage(currentStage);
+
+		// Spawn player
+		GameObject player = (GameObject) Instantiate(playerObject);
+		Camera.main.GetComponent<CameraController>().playerGameObject = player;
 	}
 
 	void LoadStageFile(string fileName) {
@@ -62,19 +73,35 @@ public class StageManager : MonoBehaviour {
 				}
 			}
 		}
+
+		foreach (Enemy enemy in stage.enemies) {
+			GameObject enemyObj = (GameObject) Instantiate(enemyObject, stageGameObject.transform);
+			enemyObj.GetComponent<EnemyController>().Init(enemy);
+		}
 	}
 }
 
 [System.Serializable]
 public class Stage {
 	public StageRow[] map;
+	public Enemy[] enemies;
+	public int[] start;
 
 	public int at(int x, int y) {
-		return map[y].row[x];
+		if (x < 0 || x >= map.Length) return 1;
+		if (y < 0 || y >= map[x].row.Length) return 1; 
+		return map[x].row[y];
 	}
 }
 
 [System.Serializable]
 public class StageRow {
 	public int[] row;
+}
+
+[System.Serializable]
+public class Enemy {
+	public int x;
+	public int z;
+	public string move;
 }

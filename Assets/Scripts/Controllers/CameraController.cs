@@ -14,6 +14,8 @@ public class CameraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (!playerGameObject) return;
+
 		Vector3 oldPosition = transform.position;
 		Vector3 newPosition = playerGameObject.transform.position + offset;
 		transform.position = Vector3.Lerp(oldPosition, newPosition, 0.1f);

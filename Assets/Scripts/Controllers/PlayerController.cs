@@ -4,17 +4,24 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-	public int x = 0;
-	public int z = 0;
+	public float noise = 0;
+
+	private int x;
+	private int z;
 
 	// Use this for initialization
 	void Start () {
+		x = StageManager.instance.currentStage.start[0];
+		z = StageManager.instance.currentStage.start[1];
+
 		InputManager.OnInput = OnInput;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position = new Vector3(x + 0.5f, 0.45f, z + 0.5f);
+		Vector3 oldPosition = transform.position;
+		Vector3 newPosition = new Vector3(x + 0.5f, 0.45f, z + 0.5f);
+		transform.position = Vector3.Lerp(oldPosition, newPosition, 0.5f);
 	}
 
 	void OnInput(int control) {
@@ -35,12 +42,20 @@ public class PlayerController : MonoBehaviour {
 				break;
 		}
 
-		Debug.Log((x + xmove) + " : " + (z + zmove));
 		int result = StageManager.instance.currentStage.at(x + xmove, z + zmove);
-		Debug.Log(result);
 		if (result == 0) {
 			x += xmove;
 			z += zmove;
 		}
+
+		if (!MusicManager.instance.isDownBeat()) {
+			ChangeNoise(0.1f);
+		}
+	}
+
+	void ChangeNoise(float value) {
+		noise += value;
+		noise = Mathf.Clamp01(noise);
+		UIManager.instance.setNoise(noise);
 	}
 }

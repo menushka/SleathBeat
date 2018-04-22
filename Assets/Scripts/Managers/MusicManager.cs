@@ -11,13 +11,24 @@ public class MusicManager : MonoBehaviour {
 	public AudioSource audioSource;
 	public Image test;
 
-	float bpm = 120f;
-	float bps = 120f / 60f;
-	int[,] beat = {{1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {1,1,1,1},
-				   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {0,0,0,0},
-				   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {1,1,1,1},
-				   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {0,0,0,0}};
-	int currentBeat = 0;
+	private float bps = 120f / 60f;
+	private int[,] beat = {{1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {1,1,1,1},
+						   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {0,0,0,0},
+						   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {1,1,1,1},
+						   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {0,0,0,0}};
+	private int currentBeat = 0;
+
+	public bool isDownBeat(bool debug = false) {
+		float seconds = (float) audioSource.timeSamples / (float) audioSource.clip.frequency;
+		float beats = seconds * bps * 4;
+		int currentBeat = Mathf.RoundToInt(beats);
+		currentBeat = Mathf.Clamp(currentBeat, 0, 63);
+		if (beat[currentBeat / 4, currentBeat % 4] == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	void Awake() {
 		if (instance == null) {
@@ -32,13 +43,18 @@ public class MusicManager : MonoBehaviour {
 	}
 	
 	void Update () {
-		float seconds = (float) audioSource.timeSamples / (float) audioSource.clip.frequency;
-		int currentBeat = Mathf.FloorToInt(seconds * bps * 4);
-		currentBeat = Mathf.Clamp(currentBeat, 0, 63);
-		if (beat[currentBeat / 4, currentBeat % 4] == 1) {
+		if (isDownBeat()) {
 			test.color = Color.red;
 		} else {
 			test.color = Color.white;
+		}
+	}
+
+	private bool WithinRange(float value, int target, float difference) {
+		if (value > target - difference && value < target + difference) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
