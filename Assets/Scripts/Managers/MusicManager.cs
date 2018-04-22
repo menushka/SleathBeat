@@ -11,19 +11,23 @@ public class MusicManager : MonoBehaviour {
 	public AudioSource audioSource;
 	public Image test;
 
-	private float bps = 120f / 60f;
-	private int[,] beat = {{1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {1,1,1,1},
-						   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {0,0,0,0},
-						   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {1,1,1,1},
-						   {1,0,0,0}, {1,0,1,0}, {1,0,0,0}, {0,0,0,0}};
+	public float bps = 120f / 60f;
+	public int[] beat = {1,0,0,0, 1,0,1,0, 1,0,0,0, 1,1,1,1,
+						 1,0,0,0, 1,0,1,0, 1,0,0,0, 0,0,0,0,
+						 1,0,0,0, 1,0,1,0, 1,0,0,0, 1,1,1,1,
+						 1,0,0,0, 1,0,1,0, 1,0,0,0, 0,0,0,0};
 	private int currentBeat = 0;
 
+	public float GetSeconds() {
+		return (float) audioSource.timeSamples / (float) audioSource.clip.frequency;
+	}
+
 	public bool isDownBeat(bool debug = false) {
-		float seconds = (float) audioSource.timeSamples / (float) audioSource.clip.frequency;
+		float seconds = GetSeconds();
 		float beats = seconds * bps * 4;
 		int currentBeat = Mathf.RoundToInt(beats);
 		currentBeat = Mathf.Clamp(currentBeat, 0, 63);
-		if (beat[currentBeat / 4, currentBeat % 4] == 1) {
+		if (beat[currentBeat] == 1) {
 			return true;
 		} else {
 			return false;

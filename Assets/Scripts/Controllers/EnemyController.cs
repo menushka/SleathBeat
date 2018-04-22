@@ -13,6 +13,8 @@ public class EnemyController : MonoBehaviour {
 	private int x;
 	private int z;
 	private string move;
+	private int[] look;
+	private int lookDistance = 3;
 
 	void Start () {
 		StartCoroutine(Move());
@@ -20,7 +22,7 @@ public class EnemyController : MonoBehaviour {
 	
 	void Update () {
 		Vector3 oldPosition = transform.position;
-		Vector3 newPosition = new Vector3(x + 0.5f, 0.45f, z + 0.5f);
+		Vector3 newPosition = new Vector3(x + 0.5f, 0.75f, z + 0.5f);
 		transform.position = Vector3.Lerp(oldPosition, newPosition, 0.5f);
 	}
 
@@ -40,6 +42,7 @@ public class EnemyController : MonoBehaviour {
 		while(true) {
 			int[][] possibleMove = {STAY, UP, RIGHT, DOWN, LEFT};
 			int[] selected = possibleMove[GetMove(i)];
+			if (selected != STAY) look = selected; 
 			int result = StageManager.instance.currentStage.at(x + selected[0], z + selected[1]);
 			if (result == 0) {
 				x += selected[0];
@@ -50,4 +53,9 @@ public class EnemyController : MonoBehaviour {
 			i %= move.Length;
 		}
 	}
+
+	void OnDrawGizmos() {
+        // Gizmos.color = Color.white;
+		// Gizmos.DrawLine(transform.position, transform.position + new Vector3(look[0] * lookDistance, 0, look[1] * lookDistance));
+    }
 }

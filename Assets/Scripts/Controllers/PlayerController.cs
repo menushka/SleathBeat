@@ -8,11 +8,13 @@ public class PlayerController : MonoBehaviour {
 
 	private int x;
 	private int z;
+	private GameObject model;
 
 	// Use this for initialization
 	void Start () {
 		x = StageManager.instance.currentStage.start[0];
 		z = StageManager.instance.currentStage.start[1];
+		model = transform.GetChild(0).gameObject;
 
 		InputManager.OnInput = OnInput;
 	}
@@ -30,15 +32,19 @@ public class PlayerController : MonoBehaviour {
 		switch(control) {
 			case InputManager.FORWARD:
 				zmove += -1;
+				model.transform.rotation = Quaternion.Euler(0, -180, 0);
 				break;
 			case InputManager.BACK:
 				zmove += 1;
+				model.transform.rotation = Quaternion.Euler(0, 0, 0);
 				break;
 			case InputManager.LEFT:
 				xmove += 1;
+				model.transform.rotation = Quaternion.Euler(0, 90, 0);
 				break;
 			case InputManager.RIGHT:
 				xmove += -1;
+				model.transform.rotation = Quaternion.Euler(0, -90, 0);
 				break;
 		}
 
