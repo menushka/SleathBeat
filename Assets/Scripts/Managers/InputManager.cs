@@ -8,6 +8,8 @@ public class InputManager : MonoBehaviour {
 	public const int BACK = 1;
 	public const int LEFT = 2;
 	public const int RIGHT = 3;
+	public const int ESC = 4;
+	public const int ANY = 5;
 
 	public delegate void OnInputPressed(int input);
 	public static OnInputPressed OnInput;
@@ -24,6 +26,8 @@ public class InputManager : MonoBehaviour {
 			if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) OnInput(BACK);
 			if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) OnInput(LEFT);
 			if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) OnInput(RIGHT);
+			if (Input.GetKeyDown(KeyCode.Escape)) OnInput(ESC);
+			if (Input.anyKeyDown) OnInput(ANY);
 		}
 	}
 }

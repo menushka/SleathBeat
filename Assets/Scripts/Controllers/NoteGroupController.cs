@@ -12,6 +12,6 @@ public class NoteGroupController : MonoBehaviour {
 
 	void Update() {
 		float time = MusicManager.instance.GetSeconds();
-		rt.anchoredPosition = new Vector3(-time * MusicManager.instance.bps * 4 * 15, 10, 0);
+		rt.anchoredPosition = new Vector3(-time * MusicManager.instance.GetBPS() * 4 * 15, 10, 0);
 	}
 }

@@ -18,6 +18,7 @@ public class StageManager : MonoBehaviour {
 	private Object rightWallObject;
 	private Object crateObject;
 	private Object enemyObject;
+	private Object endObject;
 
 	// TODO: Move to better location
 	private Object playerObject;
@@ -34,14 +35,19 @@ public class StageManager : MonoBehaviour {
 		rightWallObject = Resources.Load("Prefabs/Right Wall", typeof(GameObject));
 		crateObject = Resources.Load("Prefabs/Crate", typeof(GameObject));
 		enemyObject = Resources.Load("Prefabs/Enemy", typeof(GameObject));
+		endObject = Resources.Load("Prefabs/End", typeof(GameObject));
 
 		playerObject = Resources.Load("Prefabs/Player", typeof(GameObject));
+
+		if (LevelSelect.selectedLevel != null) {
+			LoadStageFile(LevelSelect.selectedLevel);
+		} else {
+			LoadStageFile("level1");
+		}
+		GenerateStage(currentStage);
 	}
 
 	void Start() {
-		LoadStageFile(LevelSelect.selectedLevel);
-		GenerateStage(currentStage);
-
 		// Spawn player
 		GameObject player = (GameObject) Instantiate(playerObject);
 		Camera.main.GetComponent<CameraController>().playerGameObject = player;
@@ -78,14 +84,19 @@ public class StageManager : MonoBehaviour {
 			GameObject enemyObj = (GameObject) Instantiate(enemyObject, stageGameObject.transform);
 			enemyObj.GetComponent<EnemyController>().Init(enemy);
 		}
+
+		GameObject endObj = (GameObject) Instantiate(endObject, stageGameObject.transform);
+		endObj.transform.localPosition = new Vector3(stage.end[0] + 0.5f, 25f, stage.end[1] + 0.5f);
 	}
 }
 
 [System.Serializable]
 public class Stage {
+    public string music;
 	public StageRow[] map;
 	public Enemy[] enemies;
 	public int[] start;
+	public int[] end;
 
 	public int at(int x, int y) {
 		if (x < 0 || x >= map.Length) return 1;

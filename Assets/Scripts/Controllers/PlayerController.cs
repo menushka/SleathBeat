@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #pragma warning disable 0436
 public class PlayerController : MonoBehaviour {
@@ -11,7 +12,7 @@ public class PlayerController : MonoBehaviour {
 	public int z;
 	public float noise = 0;
 
-	private bool dead = false;
+	public bool dead = false;
 	private GameObject model;
 	private GameObject noiseView;
 
@@ -55,25 +56,36 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnInput(int control) {
-		if (dead) return;
 		int xmove = 0;
 		int zmove = 0;
 		switch(control) {
 			case InputManager.FORWARD:
+				if (dead) return;
 				zmove += -1;
 				model.transform.rotation = Quaternion.Euler(0, -180, 0);
 				break;
 			case InputManager.BACK:
+				if (dead) return;
 				zmove += 1;
 				model.transform.rotation = Quaternion.Euler(0, 0, 0);
 				break;
 			case InputManager.LEFT:
+				if (dead) return;
 				xmove += 1;
 				model.transform.rotation = Quaternion.Euler(0, 90, 0);
 				break;
 			case InputManager.RIGHT:
+				if (dead) return;
 				xmove += -1;
 				model.transform.rotation = Quaternion.Euler(0, -90, 0);
+				break;
+			case InputManager.ESC:
+				SceneManager.LoadScene("LevelSelect");
+				break;
+			case InputManager.ANY:
+				if (dead) {
+					SceneManager.LoadScene("Game");
+				}
 				break;
 		}
 
@@ -94,11 +106,11 @@ public class PlayerController : MonoBehaviour {
 		noiseView.transform.localScale = new Vector3(noise * 10, 0.01f, noise * 10);
 
 		// Notify Enemies
-		foreach (EnemyController enemy in EnemyController.allEnemies) {
-			enemy.ListenFor(this);
+		if (EnemyController.allEnemies != null) {
+			foreach (EnemyController enemy in EnemyController.allEnemies) {
+				enemy.ListenFor(this);
+			}
 		}
-
-		UIManager.instance.setNoise(noise);
 	}
 
 	IEnumerator QuietDown() {

@@ -10,7 +10,8 @@ public class UIManager : MonoBehaviour {
 
 	public GameObject canvasGameObject;
 
-	private Text noiseText;
+	private Text retryText;
+	private GameObject tutorial;
 
 	private Object noteGroupObject;
 	private Object noteObject;
@@ -22,7 +23,10 @@ public class UIManager : MonoBehaviour {
 			Destroy(this);
 		}
 
-		noiseText = canvasGameObject.GetComponentInChildren<Text>();
+		retryText = canvasGameObject.GetComponentInChildren<Text>();
+		retryText.enabled = false;
+
+		tutorial = canvasGameObject.transform.Find("Tutorial").gameObject;
 
 		noteGroupObject = Resources.Load("Prefabs/Note Group", typeof(GameObject));
 		noteObject = Resources.Load("Prefabs/Note", typeof(GameObject));
@@ -33,7 +37,11 @@ public class UIManager : MonoBehaviour {
 	}
 	
 	void Update () {
-		
+		if (PlayerController.instance.dead) {
+			retryText.enabled = true;
+		} else {
+			retryText.enabled = false;
+		}
 	}
 
 	public void SpawnNotes() {
@@ -48,7 +56,15 @@ public class UIManager : MonoBehaviour {
 		noteGroup.transform.SetParent(canvasGameObject.transform, false);
 	}
 
-	public void setNoise(float noise) {
-		noiseText.text = "Noise Level: " + noise;
+	public void ToggleTutorialScreen() {
+		if (tutorial.GetComponent<RectTransform>().anchoredPosition.x == 200) {
+			Vector3 p = tutorial.GetComponent<RectTransform>().anchoredPosition;
+			p.x = -10;
+			tutorial.GetComponent<RectTransform>().anchoredPosition = p;
+		} else {
+			Vector3 p = tutorial.GetComponent<RectTransform>().anchoredPosition;
+			p.x = 200;
+			tutorial.GetComponent<RectTransform>().anchoredPosition = p;
+		}
 	}
 }
