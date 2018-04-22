@@ -39,7 +39,7 @@ public class StageManager : MonoBehaviour {
 	}
 
 	void Start() {
-		LoadStageFile("level1");
+		LoadStageFile(LevelSelect.selectedLevel);
 		GenerateStage(currentStage);
 
 		// Spawn player
@@ -91,6 +91,24 @@ public class Stage {
 		if (x < 0 || x >= map.Length) return 1;
 		if (y < 0 || y >= map[x].row.Length) return 1; 
 		return map[x].row[y];
+	}
+
+	public bool obstacleBetween(int x, int y, int x2, int y2) {
+		bool flag = true;
+		if (x == x2) {
+			int s = y < y2 ? y : y2;
+			int e = y < y2 ? y2 : y;
+			for (int t = s; t < e; t++) {
+				flag = flag && at(x, t) == 0;
+			}
+		} else if (y == y2) {
+			int s = x < x2 ? x : x2;
+			int e = x < x2 ? x2 : x;
+			for (int t = s; t < e; t++) {
+				flag = flag && at(t, y) == 0;
+			}
+		}
+		return !flag;
 	}
 }
 

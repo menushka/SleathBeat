@@ -41,18 +41,26 @@ public class EnemyController : MonoBehaviour {
 		PlayerController pc = PlayerController.instance;
 		if (pc == null) return; 
 		if (look == UP) {
-			if (z == pc.z && x > pc.x) Kill();
+			if (z == pc.z && x > pc.x && !StageManager.instance.currentStage.obstacleBetween(x, z, pc.x, pc.z)) 
+				Kill();
 		} else if (look == DOWN) {
-			if (z == pc.z && x < pc.x) Kill();
+			if (z == pc.z && x < pc.x && !StageManager.instance.currentStage.obstacleBetween(x, z, pc.x, pc.z)) 
+				Kill();
 		} else if (look == LEFT) {
-			if (x == pc.x && z > pc.z) Kill();
+			if (x == pc.x && z > pc.z && !StageManager.instance.currentStage.obstacleBetween(x, z, pc.x, pc.z)) 
+				Kill();
 		} else if (look == RIGHT) {
-			if (x == pc.x && z < pc.z) Kill();
+			if (x == pc.x && z < pc.z && !StageManager.instance.currentStage.obstacleBetween(x, z, pc.x, pc.z)) 
+				Kill();
 		}
 	}
 
 	public void Kill() {
 		if (stateBehaviour != null) StopCoroutine(stateBehaviour);
+		PlayerController pc = PlayerController.instance;
+		Vector3 centerPos = new Vector3((x + pc.x) / 2, 0, (z + pc.z) / 2);
+		Camera.main.GetComponent<CameraController>().centerTarget = centerPos;
+		Camera.main.GetComponent<CameraController>().size = 3;
 		PlayerController.instance.Kill();
 	}
 

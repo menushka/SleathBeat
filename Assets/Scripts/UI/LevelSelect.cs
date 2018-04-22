@@ -20,17 +20,17 @@ public class LevelSelect : MonoBehaviour {
 	}
 
 	void OnLevel1Click() {
-		LevelSelect.selectedLevel = "level1";
+		LevelSelect.selectedLevel = "tutorial";
 		GoToGame();
 	}
 
 	void OnLevel2Click() {
-		LevelSelect.selectedLevel = "level2";
+		LevelSelect.selectedLevel = "level1";
 		GoToGame();
 	}
 
 	void OnLevel3Click() {
-		LevelSelect.selectedLevel = "level3";
+		LevelSelect.selectedLevel = "level2";
 		GoToGame();
 	}
 

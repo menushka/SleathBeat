@@ -513,7 +513,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: alan walker
+  m_Text: 'tutorial
+
+'
 --- !u!222 &674272116
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -761,7 +763,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: mozart
+  m_Text: alan walker
 --- !u!222 &1051751503
 CanvasRenderer:
   m_ObjectHideFlags: 0

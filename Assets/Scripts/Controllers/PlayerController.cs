@@ -11,7 +11,11 @@ public class PlayerController : MonoBehaviour {
 	public int z;
 	public float noise = 0;
 
+	private bool dead = false;
 	private GameObject model;
+	private GameObject noiseView;
+
+	private Object explosionObject;
 
 	void Awake() {
 		if (instance == null) {
@@ -19,10 +23,15 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			Destroy(this);
 		}
+
+		explosionObject = Resources.Load("Prefabs/Explosion", typeof(GameObject));
 	}
 
 	public void Kill() {
-		Destroy(this.gameObject);
+		if (dead) return;
+		dead = true;
+		Instantiate(explosionObject, transform);
+		Destroy(model);
 	}
 
 	// Use this for initialization
@@ -30,6 +39,7 @@ public class PlayerController : MonoBehaviour {
 		x = StageManager.instance.currentStage.start[0];
 		z = StageManager.instance.currentStage.start[1];
 		model = transform.GetChild(0).gameObject;
+		noiseView = transform.GetChild(1).gameObject;
 
 		StartCoroutine(QuietDown());
 
@@ -38,12 +48,14 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (dead) return;
 		Vector3 oldPosition = transform.position;
 		Vector3 newPosition = new Vector3(x + 0.5f, 0.45f, z + 0.5f);
 		transform.position = Vector3.Lerp(oldPosition, newPosition, 0.5f);
 	}
 
 	void OnInput(int control) {
+		if (dead) return;
 		int xmove = 0;
 		int zmove = 0;
 		switch(control) {
@@ -79,6 +91,7 @@ public class PlayerController : MonoBehaviour {
 	void ChangeNoise(float value) {
 		noise += value;
 		noise = Mathf.Clamp01(noise);
+		noiseView.transform.localScale = new Vector3(noise * 10, 0.01f, noise * 10);
 
 		// Notify Enemies
 		foreach (EnemyController enemy in EnemyController.allEnemies) {
@@ -95,10 +108,5 @@ public class PlayerController : MonoBehaviour {
 			}
 			yield return new WaitForSeconds(1.5f);
 		}
-	}
-
-	void OnDrawGizmos() {
-		BetterGizmos.color = Color.white;
-		BetterGizmos.DrawCircle(transform.position, noise * 10);
 	}
 }
