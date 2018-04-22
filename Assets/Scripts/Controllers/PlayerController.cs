@@ -2,13 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#pragma warning disable 0436
 public class PlayerController : MonoBehaviour {
 
+	public static PlayerController instance;
+
+	public int x;
+	public int z;
 	public float noise = 0;
 
-	private int x;
-	private int z;
 	private GameObject model;
+
+	void Awake() {
+		if (instance == null) {
+			instance = this;
+		} else {
+			Destroy(this);
+		}
+	}
+
+	public void Kill() {
+		Destroy(this.gameObject);
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -56,8 +71,6 @@ public class PlayerController : MonoBehaviour {
 			z += zmove;
 		}
 
-		Debug.Log(MusicManager.instance.GetSeconds());
-		Debug.Log(Mathf.RoundToInt(MusicManager.instance.GetSeconds() * 8));
 		if (!MusicManager.instance.isDownBeat()) {
 			ChangeNoise(0.1f);
 		}
@@ -66,6 +79,12 @@ public class PlayerController : MonoBehaviour {
 	void ChangeNoise(float value) {
 		noise += value;
 		noise = Mathf.Clamp01(noise);
+
+		// Notify Enemies
+		foreach (EnemyController enemy in EnemyController.allEnemies) {
+			enemy.ListenFor(this);
+		}
+
 		UIManager.instance.setNoise(noise);
 	}
 
@@ -74,7 +93,12 @@ public class PlayerController : MonoBehaviour {
 			if (noise > 0) {
 				ChangeNoise(-0.1f);
 			}
-			yield return new WaitForSeconds(3.0f);
+			yield return new WaitForSeconds(1.5f);
 		}
+	}
+
+	void OnDrawGizmos() {
+		BetterGizmos.color = Color.white;
+		BetterGizmos.DrawCircle(transform.position, noise * 10);
 	}
 }
