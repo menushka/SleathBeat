@@ -38,8 +38,8 @@ public class UIManager : MonoBehaviour {
 
 	public void SpawnNotes() {
 		GameObject noteGroup = (GameObject) Instantiate(noteGroupObject);
-		for (int x = 0; x < MusicManager.instance.beat.Length; x++) {
-			if (MusicManager.instance.beat[x] == 1) {
+		for (int x = 0; x < MusicManager.instance.GetBeat().Length; x++) {
+			if (MusicManager.instance.GetBeat()[x] == 1) {
 				GameObject note = (GameObject) Instantiate(noteObject);
 				note.transform.SetParent(noteGroup.transform, false);
 				note.GetComponent<RectTransform>().anchoredPosition = new Vector3(x * 15, 0, 0);

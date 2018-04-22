@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
 		z = StageManager.instance.currentStage.start[1];
 		model = transform.GetChild(0).gameObject;
 
+		StartCoroutine(QuietDown());
+
 		InputManager.OnInput = OnInput;
 	}
 	
@@ -54,6 +56,8 @@ public class PlayerController : MonoBehaviour {
 			z += zmove;
 		}
 
+		Debug.Log(MusicManager.instance.GetSeconds());
+		Debug.Log(Mathf.RoundToInt(MusicManager.instance.GetSeconds() * 8));
 		if (!MusicManager.instance.isDownBeat()) {
 			ChangeNoise(0.1f);
 		}
@@ -63,5 +67,14 @@ public class PlayerController : MonoBehaviour {
 		noise += value;
 		noise = Mathf.Clamp01(noise);
 		UIManager.instance.setNoise(noise);
+	}
+
+	IEnumerator QuietDown() {
+		while(true) {
+			if (noise > 0) {
+				ChangeNoise(-0.1f);
+			}
+			yield return new WaitForSeconds(3.0f);
+		}
 	}
 }
