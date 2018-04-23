@@ -10,7 +10,8 @@ public class UIManager : MonoBehaviour {
 
 	public GameObject canvasGameObject;
 
-	private Text retryText;
+	private GameObject retryText;
+	private GameObject levelCompleteText;
 	private GameObject tutorial;
 
 	private Object noteGroupObject;
@@ -23,10 +24,16 @@ public class UIManager : MonoBehaviour {
 			Destroy(this);
 		}
 
-		retryText = canvasGameObject.GetComponentInChildren<Text>();
-		retryText.enabled = false;
+		retryText = canvasGameObject.transform.Find("RetryText").gameObject;
+		retryText.SetActive(false);
+
+		levelCompleteText = canvasGameObject.transform.Find("LevelComplete").gameObject;
+		levelCompleteText.SetActive(false);
 
 		tutorial = canvasGameObject.transform.Find("Tutorial").gameObject;
+		if (LevelSelect.selectedLevel != "tutorial") {
+			tutorial.SetActive(false);
+		}
 
 		noteGroupObject = Resources.Load("Prefabs/Note Group", typeof(GameObject));
 		noteObject = Resources.Load("Prefabs/Note", typeof(GameObject));
@@ -38,9 +45,15 @@ public class UIManager : MonoBehaviour {
 	
 	void Update () {
 		if (PlayerController.instance.dead) {
-			retryText.enabled = true;
+			retryText.SetActive(true);
 		} else {
-			retryText.enabled = false;
+			retryText.SetActive(false);
+		}
+
+		if (PlayerController.instance.win) {
+			levelCompleteText.SetActive(true);
+		} else {
+			levelCompleteText.SetActive(false);
 		}
 	}
 

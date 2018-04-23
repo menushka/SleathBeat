@@ -80,6 +80,7 @@ public class StageManager : MonoBehaviour {
 			}
 		}
 
+		EnemyController.allEnemies = new List<EnemyController>();
 		foreach (Enemy enemy in stage.enemies) {
 			GameObject enemyObj = (GameObject) Instantiate(enemyObject, stageGameObject.transform);
 			enemyObj.GetComponent<EnemyController>().Init(enemy);

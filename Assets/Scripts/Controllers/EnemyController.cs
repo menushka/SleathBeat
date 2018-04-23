@@ -73,8 +73,12 @@ public class EnemyController : MonoBehaviour {
 
 	public void ListenFor(PlayerController player) {
 		if (searching) return;
-		float distance = Mathf.Sqrt(Mathf.Pow(Mathf.Abs(player.x - x), 2) + Mathf.Pow(Mathf.Abs(player.z - z), 2));
-		if (distance < player.noise * 10) {
+		float phpx = player.transform.localPosition.x;
+		float phpz = player.transform.localPosition.z;
+		float phx = transform.localPosition.x;
+		float phz = transform.localPosition.z;
+		float distance = Mathf.Sqrt(Mathf.Pow(Mathf.Abs(phpx - phx), 2) + Mathf.Pow(Mathf.Abs(phpz - phz), 2));
+		if (distance < player.noise * 5) {
 			searching = true;
 			if (stateBehaviour != null) StopCoroutine(stateBehaviour);
 			stateBehaviour = StartCoroutine(Search());

@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour {
 	public float noise = 0;
 
 	public bool dead = false;
+	public bool win = false;
 	private GameObject model;
 	private GameObject noiseView;
 
@@ -49,7 +50,6 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (dead) return;
 		Vector3 oldPosition = transform.position;
 		Vector3 newPosition = new Vector3(x + 0.5f, 0.45f, z + 0.5f);
 		transform.position = Vector3.Lerp(oldPosition, newPosition, 0.5f);
@@ -60,22 +60,22 @@ public class PlayerController : MonoBehaviour {
 		int zmove = 0;
 		switch(control) {
 			case InputManager.FORWARD:
-				if (dead) return;
+				if (dead || win) return;
 				zmove += -1;
 				model.transform.rotation = Quaternion.Euler(0, -180, 0);
 				break;
 			case InputManager.BACK:
-				if (dead) return;
+				if (dead || win) return;
 				zmove += 1;
 				model.transform.rotation = Quaternion.Euler(0, 0, 0);
 				break;
 			case InputManager.LEFT:
-				if (dead) return;
+				if (dead || win) return;
 				xmove += 1;
 				model.transform.rotation = Quaternion.Euler(0, 90, 0);
 				break;
 			case InputManager.RIGHT:
-				if (dead) return;
+				if (dead || win) return;
 				xmove += -1;
 				model.transform.rotation = Quaternion.Euler(0, -90, 0);
 				break;
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour {
 				SceneManager.LoadScene("LevelSelect");
 				break;
 			case InputManager.ANY:
-				if (dead) {
+				if (dead || win) {
 					SceneManager.LoadScene("Game");
 				}
 				break;
@@ -97,6 +97,11 @@ public class PlayerController : MonoBehaviour {
 
 		if (!MusicManager.instance.isDownBeat()) {
 			ChangeNoise(0.1f);
+		}
+
+		int[] w = StageManager.instance.currentStage.end;
+		if (x == w[0] && z == w[1]) {
+			win = true;
 		}
 	}
 
@@ -118,7 +123,7 @@ public class PlayerController : MonoBehaviour {
 			if (noise > 0) {
 				ChangeNoise(-0.1f);
 			}
-			yield return new WaitForSeconds(1.5f);
+			yield return new WaitForSeconds(0.5f);
 		}
 	}
 }
